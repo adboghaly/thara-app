@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const GeometricCharacters = ({ mousePosition, activeInput, isPasswordVisible }) => {
   const { x, y } = mousePosition;
@@ -17,39 +17,45 @@ const GeometricCharacters = ({ mousePosition, activeInput, isPasswordVisible }) 
     idle: { x: eyeX, y: eyeY },
     email: { x: -8, y: 15 },
     password: { x: 5, y: -5, scaleY: 1.2 },
-    passwordHidden: { x: 0, y: 0, scaleY: 0.1 }
+    passwordHidden: { x: -16, y: -10 }
   };
 
   const yellowEyeVariant = {
     idle: { x: eyeX * 1.5, y: eyeY * 1.5 },
     email: { x: -12, y: 20 },
     password: { x: -5, y: -5, scaleX: 1.2 },
-    passwordHidden: { x: 0, y: 0, scaleY: 0.1 }
+    passwordHidden: { x: 16, y: -10 }
   };
 
   const orangeEyeVariant = {
     idle: { x: eyeX * 1.2, y: eyeY * 1.2 },
     email: { x: -10, y: 18 },
     password: { x: 0, y: -8, scale: 1.1 },
-    passwordHidden: { x: 0, y: 0, scaleY: 0.1 }
+    passwordHidden: { x: 12, y: 8 }
   };
 
   const navyEyeVariant = {
     idle: { x: eyeX * 0.8, y: eyeY * 0.8 },
     email: { x: -5, y: 10 },
     password: { x: 5, y: 5 },
-    passwordHidden: { x: 0, y: 0, scaleX: 0.1 }
+    passwordHidden: { x: -8, y: 8 }
   };
+
+  const getMouthVariant = (w, h, color, offsetX) => ({
+    idle: { width: w, height: h, borderRadius: '2px', backgroundColor: color, scale: 1, x: 0, y: 0 },
+    email: { width: parseInt(w)*0.8+'px', height: '3px', borderRadius: '2px', backgroundColor: color, scale: 1, x: 0, y: 2 },
+    password: { width: parseInt(w)*1.2+'px', height: '8px', borderRadius: '4px', backgroundColor: color, scale: 1, x: 0, y: 4 },
+    passwordHidden: { 
+        width: '6px', height: '6px', borderRadius: '50%', backgroundColor: color, 
+        x: offsetX, y: -2, 
+        scale: [1, 1.3, 1], transition: { repeat: Infinity, duration: 0.6 } 
+    }
+  });
 
   const floatingVariants = {
     animate: (i) => ({
       y: [0, -10, 0],
-      transition: {
-        duration: 3 + i,
-        repeat: Infinity,
-        ease: "easeInOut",
-        delay: i * 0.5
-      }
+      transition: { duration: 3 + i, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }
     })
   };
 
@@ -58,14 +64,10 @@ const GeometricCharacters = ({ mousePosition, activeInput, isPasswordVisible }) 
       {/* Purple Form */}
       <motion.div
         style={{
-          position: 'absolute', left: '16px', bottom: '16px',
-          width: '64px', height: '144px',
-          backgroundColor: '#5B2D8E',
-          borderRadius: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center'
+          position: 'absolute', left: '16px', bottom: '16px', width: '64px', height: '144px',
+          backgroundColor: '#5B2D8E', borderRadius: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center'
         }}
-        variants={floatingVariants}
-        animate="animate"
-        custom={0}
+        variants={floatingVariants} animate="animate" custom={0}
       >
         <motion.div animate={getCurrentState()} variants={purpleEyeVariant} style={{ position: 'relative', width: '30px', height: '20px' }}>
           <div style={{ position: 'absolute', left: '-4px', top: '0', width: '12px', height: '12px', backgroundColor: '#fff', borderRadius: '50%', overflow: 'hidden' }}>
@@ -78,22 +80,20 @@ const GeometricCharacters = ({ mousePosition, activeInput, isPasswordVisible }) 
                 <div style={{ width: '2px', height: '2px', backgroundColor: '#fff', borderRadius: '50%', position: 'absolute', top: '1px', right: '1px' }}/>
             </div>
           </div>
-          <div style={{ position: 'absolute', left: '8px', top: '14px', width: '14px', height: '2px', backgroundColor: '#fff', borderRadius: '2px' }} />
+          <motion.div style={{ position: 'absolute', left: '8px', top: '14px' }}
+            animate={getCurrentState()} variants={getMouthVariant('14px', '2px', '#fff', -4)} 
+          />
         </motion.div>
       </motion.div>
 
       {/* Yellow Form */}
       <motion.div
         style={{
-          position: 'absolute', right: '24px', bottom: '16px',
-          width: '56px', height: '112px',
-          backgroundColor: '#FFD166',
-          borderTopLeftRadius: '32px', borderTopRightRadius: '32px',
+          position: 'absolute', right: '24px', bottom: '16px', width: '56px', height: '112px',
+          backgroundColor: '#FFD166', borderTopLeftRadius: '32px', borderTopRightRadius: '32px',
           display: 'flex', justifyContent: 'center', paddingTop: '20px'
         }}
-        variants={floatingVariants}
-        animate="animate"
-        custom={1}
+        variants={floatingVariants} animate="animate" custom={1}
       >
         <motion.div animate={getCurrentState()} variants={yellowEyeVariant} style={{ position: 'relative', width: '24px', height: '16px' }}>
           <div style={{ position: 'absolute', left: '-2px', top: '0', width: '10px', height: '10px', backgroundColor: '#fff', borderRadius: '50%', overflow: 'hidden' }}>
@@ -106,22 +106,20 @@ const GeometricCharacters = ({ mousePosition, activeInput, isPasswordVisible }) 
                 <div style={{ width: '2px', height: '2px', backgroundColor: '#fff', borderRadius: '50%', position: 'absolute', top: '1px', right: '1px' }}/>
             </div>
           </div>
-          <div style={{ position: 'absolute', left: '8px', top: '12px', width: '8px', height: '2px', backgroundColor: '#1A1A2E', borderRadius: '2px' }} />
+          <motion.div style={{ position: 'absolute', left: '8px', top: '12px' }}
+            animate={getCurrentState()} variants={getMouthVariant('8px', '2px', '#1A1A2E', 4)} 
+          />
         </motion.div>
       </motion.div>
 
       {/* Dark Navy Form */}
       <motion.div
         style={{
-          position: 'absolute', left: '90px', bottom: '16px',
-          width: '48px', height: '80px',
-          backgroundColor: '#1A1A2E',
-          borderRadius: '12px', zIndex: 10,
+          position: 'absolute', left: '90px', bottom: '16px', width: '48px', height: '80px',
+          backgroundColor: '#1A1A2E', borderRadius: '12px', zIndex: 10,
           display: 'flex', justifyContent: 'center', paddingTop: '16px'
         }}
-        variants={floatingVariants}
-        animate="animate"
-        custom={2}
+        variants={floatingVariants} animate="animate" custom={2}
       >
         <motion.div animate={getCurrentState()} variants={navyEyeVariant} style={{ position: 'relative', width: '20px', height: '16px' }}>
           <div style={{ position: 'absolute', left: '-2px', top: '2px', width: '8px', height: '8px', backgroundColor: '#fff', borderRadius: '50%', overflow: 'hidden' }}>
@@ -130,23 +128,21 @@ const GeometricCharacters = ({ mousePosition, activeInput, isPasswordVisible }) 
           <div style={{ position: 'absolute', right: '-2px', top: '2px', width: '8px', height: '8px', backgroundColor: '#fff', borderRadius: '50%', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', width: '4px', height: '4px', backgroundColor: '#000', borderRadius: '50%', top: '2px', left: '2px' }} />
           </div>
-          <div style={{ position: 'absolute', left: '6px', top: '12px', width: '8px', height: '2px', backgroundColor: '#fff', borderRadius: '2px' }} />
+          <motion.div style={{ position: 'absolute', left: '6px', top: '12px' }}
+            animate={getCurrentState()} variants={getMouthVariant('8px', '2px', '#fff', -2)} 
+          />
         </motion.div>
       </motion.div>
 
       {/* Orange Form (Front) */}
       <motion.div
         style={{
-          position: 'absolute', left: '48px', bottom: '0',
-          width: '88px', height: '56px',
-          backgroundColor: '#FF6B35',
-          borderTopLeftRadius: '44px', borderTopRightRadius: '44px',
+          position: 'absolute', left: '48px', bottom: '0', width: '88px', height: '56px',
+          backgroundColor: '#FF6B35', borderTopLeftRadius: '44px', borderTopRightRadius: '44px',
           zIndex: 20, boxShadow: '0 10px 20px rgba(255, 107, 53, 0.2)',
           display: 'flex', justifyContent: 'center', paddingTop: '16px'
         }}
-        variants={floatingVariants}
-        animate="animate"
-        custom={1.5}
+        variants={floatingVariants} animate="animate" custom={1.5}
       >
         <motion.div animate={getCurrentState()} variants={orangeEyeVariant} style={{ position: 'relative', width: '24px', height: '16px' }}>
           <div style={{ position: 'absolute', left: '-2px', top: '0', width: '10px', height: '10px', backgroundColor: '#fff', borderRadius: '50%', overflow: 'hidden' }}>
@@ -159,7 +155,9 @@ const GeometricCharacters = ({ mousePosition, activeInput, isPasswordVisible }) 
                 <div style={{ width: '2px', height: '2px', backgroundColor: '#fff', borderRadius: '50%', position: 'absolute', top: '1px', right: '1px' }}/>
             </div>
           </div>
-          <div style={{ position: 'absolute', left: '8px', top: '10px', width: '8px', height: '2px', backgroundColor: '#1A1A2E', borderRadius: '2px' }} />
+          <motion.div style={{ position: 'absolute', left: '8px', top: '10px' }}
+            animate={getCurrentState()} variants={getMouthVariant('8px', '2px', '#1A1A2E', 4)} 
+          />
         </motion.div>
       </motion.div>
     </div>
