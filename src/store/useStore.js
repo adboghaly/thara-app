@@ -31,6 +31,9 @@ const syncToCloud = async (state) => {
         console.log("☁️ State backed up to Firebase.");
     } catch(err) {
         console.error("Cloud Sync Error (Check Firebase Rules):", err);
+        if (useStore.getState) {
+          useStore.getState().showToast('❌ الداتا متسجلتش! برجاء فتح Rules في Firebase');
+        }
     }
 }
 
