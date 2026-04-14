@@ -77,23 +77,9 @@ export default function SetupScreen() {
   };
 
   return (
-    <div 
-      dir="rtl" 
-      style={{ 
-        position: 'fixed', top: 0, left: 0, zIndex: 100,
-        width: '100vw', height: '100vh', 
-        display: 'flex', backgroundColor: '#E5E7EB', overflow: 'hidden'
-      }}
-    >
+    <div className="setup-container" dir="rtl">
       {/* Right Panel: Form UI */}
-      <div style={{ 
-        width: '50%', height: '100%', backgroundColor: '#fff', 
-        boxShadow: '-20px 0 40px rgba(0,0,0,0.03)', 
-        borderBottomRightRadius: '3rem', zIndex: 10,
-        display: 'flex', flexDirection: 'column', 
-        justifyContent: 'center', alignItems: 'center',
-        position: 'relative', overflow: 'hidden'
-      }}>
+      <div className="setup-form-panel">
         
         <img 
           src="/thara_logo.png" alt="Thara" 
@@ -173,8 +159,8 @@ export default function SetupScreen() {
       </div>
 
       {/* Left Panel: Geometric Characters */}
-      <div style={{ width: '50%', height: '100%', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ zIndex: 1, position: 'relative' }}>
+      <div className="setup-art-panel">
+        <div style={{ zIndex: 1, position: 'relative', transform: 'scale(0.8)', transformOrigin: 'center' }}>
           <GeometricCharacters mousePosition={mousePosition} activeInput={activeInput} isPasswordVisible={isPasswordVisible} />
         </div>
       </div>
