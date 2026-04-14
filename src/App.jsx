@@ -7,6 +7,7 @@ import AddTransactionScreen from './features/transactions/AddTransactionScreen';
 import TransactionsListScreen from './features/transactions/TransactionsListScreen';
 import BudgetScreen from './features/budget/BudgetScreen';
 import ReportScreen from './features/reports/ReportScreen';
+import InvestmentsScreen from './features/investments/InvestmentsScreen';
 import SettingsModal from './features/settings/SettingsModal';
 import Navigation from './components/Navigation';
 import SplashScreen from './components/SplashScreen';
@@ -37,11 +38,14 @@ export default function App() {
 
   if (!setup) {
     return (
-      <AnimatePresence mode="wait">
-        <motion.div key="setup" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}>
-          <SetupScreen />
-        </motion.div>
-      </AnimatePresence>
+      <React.Fragment>
+        <AnimatePresence mode="wait">
+          <motion.div key="setup" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}>
+            <SetupScreen />
+          </motion.div>
+        </AnimatePresence>
+        <div id="toast" className={toastMessage ? 'show' : ''} style={{ zIndex: 9999 }}>{toastMessage}</div>
+      </React.Fragment>
     );
   }
 
@@ -72,6 +76,11 @@ export default function App() {
           {currentScreen === 'rep' && (
              <motion.div key="rep" variants={variants} initial="initial" animate="animate" exit="exit" style={{width:'100%', display:'flex'}}>
               <ReportScreen />
+            </motion.div>
+          )}
+          {currentScreen === 'inv' && (
+             <motion.div key="inv" variants={variants} initial="initial" animate="animate" exit="exit" style={{width:'100%', display:'flex'}}>
+              <InvestmentsScreen />
             </motion.div>
           )}
         </AnimatePresence>

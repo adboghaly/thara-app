@@ -1,4 +1,6 @@
 import { create } from 'zustand'
+import { doc, setDoc, getDoc } from "firebase/firestore"
+import { db } from "../config/firebase"
 
 const INITIAL_CATS = [
   {id:'rent',ar:'إيجار',en:'Rent',icon:'🏠',group:'ess',c:'#b794f4'},
@@ -15,18 +17,47 @@ const INITIAL_CATS = [
   {id:'other',ar:'أخرى',en:'Other',icon:'📦',group:'var',c:'#94a3b8'},
 ];
 
+let uid = localStorage.getItem('thara_uid');
+if (!uid) {
+  uid = 'user_' + Math.random().toString(36).substr(2, 9);
+  localStorage.setItem('thara_uid', uid);
+}
+
+const syncToCloud = async (state) => {
+    try {
+        const userRef = doc(db, 'users', uid);
+        const { cats, toastMessage, ...pureState } = state; 
+        await setDoc(userRef, pureState, { merge: true });
+        console.log("☁️ State backed up to Firebase.");
+    } catch(err) {
+        console.error("Cloud Sync Error (Check Firebase Rules):", err);
+    }
+}
+
+const commitState = (oldState, newState) => {
+    const finalState = { ...oldState, ...newState };
+    localStorage.setItem('thara2', JSON.stringify(finalState));
+    syncToCloud(finalState);
+    return newState;
+}
+
 const getLocalState = () => {
     try {
         const d = localStorage.getItem('thara2');
-        if (d) return JSON.parse(d);
-    } catch(err) {
-        // ignore
-    }
+        if (d) {
+            const st = JSON.parse(d);
+            syncToCloud(st); // trigger initial backup loop
+            return st;
+        }
+    } catch(err) {}
+    
     return {
         setup: false,
+        name: 'أحمد',
         income: 0,
         email: '',
         alloc: { ess: 60, sav: 20, inv: 10, disc: 10 },
+        investments: [],
         transactions: [],
         budgets: {},
         toastMessage: ''
@@ -37,15 +68,12 @@ export const useStore = create((set, get) => ({
     ...getLocalState(),
     cats: INITIAL_CATS,
 
-    // Actions
     updateAlloc: (key, val) => set((state) => {
         const newAlloc = { ...state.alloc, [key]: parseInt(val) || 0 };
-        const newState = { alloc: newAlloc };
-        localStorage.setItem('thara2', JSON.stringify({...state, ...newState}));
-        return newState;
+        return commitState(state, { alloc: newAlloc });
     }),
 
-    doSetup: (income, email) => set((state) => {
+    doSetup: (income, email, name) => set((state) => {
         let newBudgets = { ...state.budgets };
         INITIAL_CATS.forEach(c => {
             if (!newBudgets[c.id]) {
@@ -58,37 +86,42 @@ export const useStore = create((set, get) => ({
                 newBudgets[c.id] = Math.round(income * (p / 100));
             }
         });
-        const newState = { setup: true, income, email, budgets: newBudgets };
-        localStorage.setItem('thara2', JSON.stringify({...state, ...newState}));
-        return newState;
+        return commitState(state, { setup: true, income, email, name: name || 'أحمد', budgets: newBudgets });
     }),
 
     addTransaction: (tx) => {
-        set((state) => {
-            const newState = { transactions: [tx, ...state.transactions] };
-            localStorage.setItem('thara2', JSON.stringify({...state, ...newState}));
-            return newState;
-        });
-        get().showToast('✅ تم حفظ المعاملة بنجاح');
+        set((state) => commitState(state, { transactions: [tx, ...state.transactions] }));
+        get().showToast('✅ تم حفظ المعاملة بنجاح (والمزامنة السحابية)');
     },
 
     saveBudget: (id, val) => {
-        set((state) => {
-            const newBudgets = { ...state.budgets, [id]: parseInt(val) || 0 };
-            const newState = { budgets: newBudgets };
-            localStorage.setItem('thara2', JSON.stringify({...state, ...newState}));
-            return newState;
-        });
+        set((state) => commitState(state, { budgets: { ...state.budgets, [id]: parseInt(val) || 0 } }));
         get().showToast('✅ تم حفظ الميزانية');
     },
 
     saveSettings: (income, email) => {
-        set((state) => {
-            const newState = { income: income || state.income, email };
-            localStorage.setItem('thara2', JSON.stringify({...state, ...newState}));
-            return newState;
-        });
-        get().showToast('✅ تم تحديث الإعدادات');
+        set((state) => commitState(state, { income: income || state.income, email }));
+        get().showToast('✅ تم تحديث الإعدادات السحابية');
+    },
+
+    hydrateFromCloud: async (userUid, userEmail) => {
+        // Cache the real UID so further operations sync to it
+        localStorage.setItem('thara_uid', userUid);
+        uid = userUid;
+        try {
+            const snap = await getDoc(doc(db, 'users', userUid));
+            if (snap.exists()) {
+                const data = snap.data();
+                const newState = { ...data, setup: true, email: userEmail || data.email };
+                set(newState);
+                localStorage.setItem('thara2', JSON.stringify({ ...get(), ...newState }));
+                get().showToast('تم استرجاع بياناتك بنجاح من السحابة ☁️');
+                return true;
+            }
+        } catch(err) {
+            console.error(err);
+        }
+        return false;
     },
 
     showToast: (msg) => {
@@ -98,13 +131,25 @@ export const useStore = create((set, get) => ({
 
     resetApp: () => {
         localStorage.removeItem('thara2');
-        set({
-            setup: false,
-            income: 0,
-            email: '',
+        const emptyState = {
+            setup: false, name: 'أحمد', income: 0, email: '',
             alloc: { ess: 60, sav: 20, inv: 10, disc: 10 },
-            transactions: [],
-            budgets: {}
-        });
+            investments: [], transactions: [], budgets: {}
+        };
+        syncToCloud(emptyState);
+        set(emptyState);
+    },
+
+    logout: () => {
+        if(window.confirm('Are you sure you want to logout? تسجيل خروج؟')) {
+            localStorage.removeItem('thara2');
+            localStorage.removeItem('thara_uid');
+            window.location.reload();
+        }
+    },
+
+    addInvestment: (investment) => {
+        set((state) => commitState(state, { investments: [...(state.investments || []), { ...investment, id: Date.now() }] }));
+        get().showToast('✅ تم إضافة الاستثمار (ومزامنته)');
     }
 }));

@@ -58,23 +58,29 @@ body{font-family:'Outfit','Cairo',sans-serif;color:var(--text);overflow-x:hidden
   border:0.5px solid var(--border2);
 }
 
-/* NAV */
+/* NAV FLOATING BAR */
 .nav{
-  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-  width:calc(100% - 32px);max-width:408px;z-index:300;
-  display:flex;padding:12px 10px;
-  background:rgba(20,20,38,0.85);
-  backdrop-filter:blur(30px) saturate(180%);
-  -webkit-backdrop-filter:blur(30px) saturate(180%);
-  border:0.5px solid var(--border2);
-  border-radius:28px;
-  box-shadow:0 15px 40px rgba(0,0,0,0.5);
+  position:fixed;bottom:16px;left:16px;right:16px;max-width:408px;margin:0 auto;
+  height:76px;background:rgba(10, 10, 24, 0.85);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-radius:24px;border:1px solid rgba(255,255,255,0.08);
+  display:flex;justify-content:space-around;align-items:center;z-index:90;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
 }
-.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;border:none;background:none;color:var(--text3);cursor:pointer;padding:6px 0;font-size:10px;font-family:'Cairo',sans-serif;transition:all .3s;position:relative}
-.nb.on{color:var(--gold)}
-.nb svg{width:21px;height:21px;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round;transition:all .3s}
-.nb.on svg{stroke:var(--gold);filter:drop-shadow(0 0 6px rgba(247,201,72,.4))}
-.nb.on::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:28px;height:2px;background:var(--gold);border-radius:0 0 3px 3px;box-shadow:0 0 8px var(--gold)}
+.nb{
+  display:flex;flex-direction:column;align-items:center;gap:6px;border:none;background:none;
+  text-decoration:none;color:var(--text3);font-size:10px;font-family:'Cairo',sans-serif;
+  text-transform:uppercase;letter-spacing:1px;font-weight:600;
+  transition:all 0.3s;width:60px;cursor:pointer;
+}
+.nb.on{
+  color:var(--accent);
+  text-shadow: 0 0 15px rgba(255,107,53,0.5);
+  transform: translateY(-2px);
+}
+.nb.on svg {
+  stroke: var(--accent);
+}
 
 /* SCREENS */
 .sc{display:none;flex-direction:column;padding-bottom:95px;min-height:100vh}
@@ -110,6 +116,38 @@ body{font-family:'Outfit','Cairo',sans-serif;color:var(--text);overflow-x:hidden
 .glow-teal{text-shadow:0 0 20px rgba(0,229,192,.5)}
 .glow-red{text-shadow:0 0 20px rgba(255,79,123,.5)}
 
+/* THARWA PREMIUM CARD */
+.tharwa-card {
+  margin: 0 16px 20px;
+  border-radius: 24px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1A1A2E 0%, #2A2A4A 100%);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.1);
+  color: #fff;
+  border: 0.5px solid rgba(255,255,255,0.05);
+}
+.tharwa-card::before {
+  content: ''; position: absolute; right: -30px; top: -30px; width: 140px; height: 140px;
+  background: #5B2D8E; border-radius: 50%; filter: blur(50px); opacity: 0.8; pointer-events: none;
+}
+.tharwa-card::after {
+  content: ''; position: absolute; left: -20px; bottom: -20px; width: 120px; height: 120px;
+  background: #FF6B35; border-radius: 50%; filter: blur(50px); opacity: 0.5; pointer-events: none;
+}
+.tharwa-card .content { position: relative; z-index: 10; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+.tharwa-card .title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; direction: ltr; }
+.tharwa-card .title { font-size: 18px; font-weight: 800; letter-spacing: 2px; }
+.tharwa-card .balance-label { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 12px; margin-bottom: 2px; }
+.tharwa-card .balance { font-size: 38px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; letter-spacing: -1px; display:flex; align-items: baseline; gap: 6px; }
+.tharwa-card .balance sup { font-size: 16px; font-weight: 400; opacity: 0.8; }
+.tharwa-card .bottom-row { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 24px; width: 100%; direction: ltr; }
+.tharwa-card .holder-label { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; }
+.tharwa-card .holder-name { font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
+.tharwa-card .date { font-size: 12px; font-family: 'Space Grotesk', monospace; color: rgba(255,255,255,0.6); letter-spacing: 2px; }
+
+
 /* CARD */
 .card{
   margin:0 16px 16px;border-radius:20px;padding:20px;
@@ -142,17 +180,30 @@ body{font-family:'Outfit','Cairo',sans-serif;color:var(--text);overflow-x:hidden
 .fa{background:linear-gradient(90deg,#cc8000,var(--amber))}
 .fp{background:linear-gradient(90deg,#7c4dcf,var(--purple))}
 
-/* TX */
-.txi{display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:0.5px solid var(--border);animation:fadeup .3s ease}
-.txi:last-child{border-bottom:none}
-@keyframes fadeup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.txav{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;position:relative;box-shadow:0 4px 10px rgba(0,0,0,0.2)}
-.txbody{flex:1;min-width:0}
-.txname{font-size:16px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:0.5px}
-.txmeta{font-size:12.5px;color:var(--text3);margin-top:2px;font-family:'Space Grotesk',sans-serif}
-.txamt{font-size:16px;font-weight:700;font-family:'Space Grotesk',monospace;white-space:nowrap}
-.inc{color:var(--teal)}
-.exp{color:var(--red)}
+/* PREMIUM TRANSACTIONS & BUDGETS (.txi, .brow) */
+.txi, .brow {
+  display:flex; align-items:center; padding:16px; 
+  background: rgba(255,255,255,0.02); 
+  border: 1px solid rgba(255,255,255,0.04); 
+  border-radius: 20px; margin-bottom: 12px; 
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.txi:active, .brow:active {
+  transform: scale(0.98);
+  background: rgba(255,255,255,0.05);
+}
+.txav, .brow-icon {
+  width: 48px; height: 48px; border-radius: 14px; 
+  display:flex; justify-content:center; align-items:center; 
+  box-shadow: inset 0 2px 10px rgba(255,255,255,0.1);
+}
+.txbody, .brow-body { flex: 1; padding: 0 16px; }
+.txname, .brow-name { font-weight: 700; font-size: 15px; letter-spacing: 0.5px; }
+.txmeta { font-size: 12px; color: var(--text3); margin-top: 5px; }
+.txamt { font-size: 16px; font-weight: 700; font-family: 'Space Grotesk', monospace; text-align: right; }
+.txamt.inc { color: var(--teal); text-shadow: 0 0 15px rgba(0,229,192,0.4); }
+.txamt.exp { color: var(--text); }
 
 /* ALERTS */
 .al{display:flex;gap:10px;padding:11px 14px;border-radius:12px;margin-bottom:8px;align-items:flex-start;border:0.5px solid;backdrop-filter:blur(10px);animation:slideR .3s ease}

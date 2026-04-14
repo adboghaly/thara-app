@@ -8,7 +8,7 @@ import { Settings, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function DashboardScreen({ openSettings, goSc }) {
-  const { income, transactions, budgets, cats } = useStore();
+  const { income, transactions, budgets, cats, name } = useStore();
   const m = curM();
   const txs = transactions.filter(t => t.date.startsWith(m));
   
@@ -81,7 +81,7 @@ export default function DashboardScreen({ openSettings, goSc }) {
       <div className="hdr" style={{ paddingBottom: '8px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }} className="htitle">مرحباً 👋</motion.div>
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }} className="htitle">مرحباً {name || ''} 👋</motion.div>
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="hsub">{ml}</motion.div>
           </div>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -109,31 +109,29 @@ export default function DashboardScreen({ openSettings, goSc }) {
       </div>
 
       <motion.div 
-        className="hero" 
-        style={{ 
-          background: heroBackground,
-          boxShadow: '0 20px 40px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.2)',
-          borderRadius: '24px'
-        }}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, type: 'spring' }}
+        className="tharwa-card"
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ delay: 0.2, type: 'spring', stiffness: 300, damping: 25 }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
-          <div>
-            <div className="hero-label">Total Balance</div>
-            <div className="hero-num glow-gold" style={{ fontSize: '38px', marginTop: '4px' }}><sup>ج</sup><AnimatedNumber value={rem} /></div>
+        <div className="content">
+          <div className="title-row">
+            <span className="title">ثروة CARD</span>
+            <svg width="34" height="22" viewBox="0 0 34 22" fill="none"><circle cx="11" cy="11" r="11" fill="#fff" fillOpacity="0.5"/><circle cx="23" cy="11" r="11" fill="#fff" fillOpacity="0.5"/></svg>
           </div>
-          <img src="/thara_logo.png" alt="Card Logo" style={{ width: '40px', height: '40px', borderRadius: '10px', boxShadow: '0 4px 10px rgba(0,0,0,0.3)' }} />
-        </div>
-        
-        <div className="hero-sub" style={{ opacity: 0.8, letterSpacing: '2px', fontFamily: "'Space Grotesk', monospace" }}>**** **** **** 4092</div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: '20px' }}>
-          <div>
-            <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' }}>Cardholder</div>
-            <div style={{ fontSize: '13px', fontWeight: '600', letterSpacing: '1px' }}>Thara Member</div>
+          
+          <div style={{ textAlign: 'left', direction: 'ltr' }}>
+            <div className="balance-label" style={{ textAlign: 'right', direction: 'rtl' }}>الرصيد الإجمالي</div>
+            <div className="balance glow-gold"><sup>EGP</sup><AnimatedNumber value={rem} /></div>
           </div>
-          <div className="hero-badge" style={{ margin: 0, border: 'none', background: 'rgba(0,0,0,0.2)' }}><Sparkles size={12} /> <span>{period}</span></div>
+
+          <div className="bottom-row">
+            <div style={{ textAlign: 'left' }}>
+              <div className="holder-label">Cardholder</div>
+              <div className="holder-name">{name || 'Thara Member'}</div>
+            </div>
+            <div className="date">12/28</div>
+          </div>
         </div>
       </motion.div>
 

@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #5B2D8E;
+  --color-accent: #FF6B35;
+  --color-highlight: #FFD166;
+  --color-dark: #1A1A2E;
+  --color-bgLight: #F8F8F8;
+  
+  --font-arabic: 'Cairo', sans-serif;
+  
+  --animate-blob: blob 7s infinite;
+
+  @keyframes blob {
+    0% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+    100% { transform: translate(0px, 0px) scale(1); }
+  }
+}
