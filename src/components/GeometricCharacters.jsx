@@ -41,16 +41,19 @@ const GeometricCharacters = ({ mousePosition, activeInput, isPasswordVisible }) 
     passwordHidden: { x: -8, y: 8 }
   };
 
-  const getMouthVariant = (w, h, color, offsetX) => ({
-    idle: { width: w, height: h, borderRadius: '2px', backgroundColor: color, scale: 1, x: 0, y: 0 },
-    email: { width: parseInt(w)*0.8+'px', height: '3px', borderRadius: '2px', backgroundColor: color, scale: 1, x: 0, y: 2 },
-    password: { width: parseInt(w)*1.2+'px', height: '8px', borderRadius: '4px', backgroundColor: color, scale: 1, x: 0, y: 4 },
-    passwordHidden: { 
-        width: '6px', height: '6px', borderRadius: '50%', backgroundColor: color, 
-        x: offsetX, y: -2, 
-        scale: [1, 1.3, 1], transition: { repeat: Infinity, duration: 0.6 } 
-    }
-  });
+  const getMouthAnimate = (state, w, h, color, offsetX) => {
+    const v = {
+      idle: { width: w, height: h, borderRadius: '2px', backgroundColor: color, scale: 1, x: 0, y: 0 },
+      email: { width: parseInt(w)*0.8+'px', height: '3px', borderRadius: '2px', backgroundColor: color, scale: 1, x: 0, y: 2 },
+      password: { width: parseInt(w)*1.2+'px', height: '8px', borderRadius: '4px', backgroundColor: color, scale: 1, x: 0, y: 4 },
+      passwordHidden: { 
+          width: '6px', height: '6px', borderRadius: '50%', backgroundColor: color, 
+          x: offsetX, y: -2, 
+          scale: [1, 1.3, 1], transition: { repeat: Infinity, duration: 0.6 } 
+      }
+    };
+    return v[state];
+  };
 
   const floatingVariants = {
     animate: (i) => ({
@@ -81,7 +84,7 @@ const GeometricCharacters = ({ mousePosition, activeInput, isPasswordVisible }) 
             </div>
           </div>
           <motion.div style={{ position: 'absolute', left: '8px', top: '14px' }}
-            animate={getCurrentState()} variants={getMouthVariant('14px', '2px', '#fff', -4)} 
+            animate={getMouthAnimate(getCurrentState(), '14px', '2px', '#fff', -4)} 
           />
         </motion.div>
       </motion.div>
@@ -107,7 +110,7 @@ const GeometricCharacters = ({ mousePosition, activeInput, isPasswordVisible }) 
             </div>
           </div>
           <motion.div style={{ position: 'absolute', left: '8px', top: '12px' }}
-            animate={getCurrentState()} variants={getMouthVariant('8px', '2px', '#1A1A2E', 4)} 
+            animate={getMouthAnimate(getCurrentState(), '8px', '2px', '#1A1A2E', 4)} 
           />
         </motion.div>
       </motion.div>
@@ -129,7 +132,7 @@ const GeometricCharacters = ({ mousePosition, activeInput, isPasswordVisible }) 
             <div style={{ position: 'absolute', width: '4px', height: '4px', backgroundColor: '#000', borderRadius: '50%', top: '2px', left: '2px' }} />
           </div>
           <motion.div style={{ position: 'absolute', left: '6px', top: '12px' }}
-            animate={getCurrentState()} variants={getMouthVariant('8px', '2px', '#fff', -2)} 
+            animate={getMouthAnimate(getCurrentState(), '8px', '2px', '#fff', -2)} 
           />
         </motion.div>
       </motion.div>
@@ -156,7 +159,7 @@ const GeometricCharacters = ({ mousePosition, activeInput, isPasswordVisible }) 
             </div>
           </div>
           <motion.div style={{ position: 'absolute', left: '8px', top: '10px' }}
-            animate={getCurrentState()} variants={getMouthVariant('8px', '2px', '#1A1A2E', 4)} 
+            animate={getMouthAnimate(getCurrentState(), '8px', '2px', '#1A1A2E', 4)} 
           />
         </motion.div>
       </motion.div>
