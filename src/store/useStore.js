@@ -26,7 +26,10 @@ if (!uid) {
 const syncToCloud = async (state) => {
     try {
         const userRef = doc(db, 'users', uid);
-        const { cats, toastMessage, ...pureState } = state; 
+        const dataKeys = ['setup', 'name', 'income', 'email', 'alloc', 'investments', 'transactions', 'budgets'];
+        const pureState = {};
+        dataKeys.forEach(k => { if(state[k] !== undefined) pureState[k] = state[k] });
+        
         await setDoc(userRef, pureState, { merge: true });
         console.log("☁️ State backed up to Firebase.");
     } catch(err) {
